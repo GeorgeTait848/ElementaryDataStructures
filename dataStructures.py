@@ -58,8 +58,12 @@ class LinkedList:
 
     def __len__(self) -> int: 
 
-        nodes = [node for node in self]
-        return len(nodes)
+        len = 0
+
+        for _ in self:
+            len += 1
+        
+        return len
 
     
     def __str__(self) -> str:
