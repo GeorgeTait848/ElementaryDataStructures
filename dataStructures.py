@@ -106,7 +106,7 @@ class LinkedList:
         return True
 
     def addFirst(self, node: Node):
-
+        
         node.next = self.head
 
         if self.doublyLinked: 
@@ -135,6 +135,17 @@ class LinkedList:
 
         if self.doublyLinked:
             currentNode.next.prev = currentNode
+
+
+    def pop(self):
+
+        if self.head is None:
+            return
+        
+        self.head = self.head.next
+
+        if self.doublyLinked and self.head is not None:
+            self.head.prev = None
 
         
 

@@ -278,6 +278,47 @@ class LinkedListTests(unittest.TestCase):
 
             self.testLinkedLists[i] = currentLL
 
+    def testPop(self): 
+
+            # LinkedList(),
+            # LinkedList([1,2,3]),
+            # LinkedList([4,2,3,5,7]), 
+            # LinkedList([0]), 
+            # LinkedList(["a", "b", 1, "guy"]), 
+            # LinkedList(nodes=None, doublyLinked=True),
+            # LinkedList(nodes=[0,4,6], doublyLinked=True),
+            # LinkedList(nodes=[4,9,8,6,4], doublyLinked=True), 
+            # LinkedList(nodes=["cowboy"], doublyLinked=True), 
+            # LinkedList(nodes=["a", "b", 1, "guy"], doublyLinked=True), 
+            # LinkedList(nodes=["x", "xy", 1, 2, 3, 9, 5, 12, 0, 4], doublyLinked=True)
+            # ]
+
+        correctPoppedLists = [
+            LinkedList(), 
+            LinkedList([2,3]), 
+            LinkedList([2,3,5,7]), 
+            LinkedList([]),
+            LinkedList(['b', 1, "guy"]), 
+            LinkedList(nodes=None, doublyLinked=True), 
+            LinkedList(nodes=[4,6], doublyLinked=True),
+            LinkedList(nodes=[9,8,6,4], doublyLinked=True), 
+            LinkedList(nodes=[], doublyLinked=True), 
+            LinkedList(nodes=["b", 1, "guy"], doublyLinked=True), 
+            LinkedList(nodes=["xy", 1, 2, 3, 9, 5, 12, 0, 4], doublyLinked=True)
+        ]
+
+        for i in range(len(self.testLinkedLists)):
+
+            currentLL = self.testLinkedLists[i]
+            self.testLinkedLists[i].pop()
+
+            self.assertEqual(correctPoppedLists[i], self.testLinkedLists[i])
+
+            self.testLinkedLists[i] = currentLL
+
+        
+
+
 
             
 

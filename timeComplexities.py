@@ -73,7 +73,7 @@ def getComputationTimes(dataStructure, operationName: str, lens: list[int], **kw
         operation(instances[i], **kwargs)
         end=time.time()
 
-        times[i] = (end-start)/1e-3
+        times[i] = (end-start)/1e-6
 
     return times
     
@@ -99,7 +99,7 @@ def plotTimeComplexity(dataStructure, operationName: str, lens: list[int], **kwa
 
     fig.update_layout(
         xaxis_title = r"$\ln{L}$",
-        yaxis_title = r"$\ln{T}$", 
+        yaxis_title = r"$\ln{T (\mu \textrm{s})}$", 
         title_text = "Time Complexity of algorithm {} for data structure {}".format(operationName, dataStructure.__name__),
         title_font = dict(size=25),
         title_x = 0.5
@@ -120,11 +120,11 @@ def plotTimeComplexity(dataStructure, operationName: str, lens: list[int], **kwa
 
 def main():
 
-    lens = [1_000, 10_000, 100_000, 1_000_000]
+    lens = [20_000, 100_000, 500_000, 1_000_000]
 
     plotTimeComplexity(LinkedList, 'addFirst', lens, node=Node(0))
-
     # plotTimeComplexity(LinkedList, 'addLast', lens, node=Node(0))
+    # plotTimeComplexity(LinkedList, 'pop', lens)
     # plotTimeComplexity(TwoSum, 'useLoop', lens, target=1)
     # plotTimeComplexity(TwoSum, 'useHashMap', lens, target=1)
 
