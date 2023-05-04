@@ -122,7 +122,8 @@ def main():
 
     lens = [20_000, 100_000, 500_000, 1_000_000]
 
-    plotTimeComplexity(LinkedList, 'addFirst', lens, node=Node(0))
+    # plotTimeComplexity(LinkedList, 'addFirst', lens, node=Node(0))
+    plotTimeComplexity(LinkedList, 'reverse', lens)
     # plotTimeComplexity(LinkedList, 'addLast', lens, node=Node(0))
     # plotTimeComplexity(LinkedList, 'pop', lens)
     # plotTimeComplexity(TwoSum, 'useLoop', lens, target=1)

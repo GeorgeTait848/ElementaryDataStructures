@@ -147,6 +147,25 @@ class LinkedList:
         if self.doublyLinked and self.head is not None:
             self.head.prev = None
 
+    def reverse(self):
+
+        currentNode = self.head
+        prevNode = None
+
+        while currentNode is not None:
+
+            nextNode = currentNode.next
+            currentNode.next = prevNode
+
+            if self.doublyLinked:
+                currentNode.prev = nextNode
+
+            prevNode = currentNode
+            currentNode = nextNode
+
+        
+        self.head = prevNode
+
         
 
 class Stack: 
@@ -185,14 +204,3 @@ class TwoSum:
 
         
 
-
-
-def main():
-    pass
-    
-
-
-
-
-if __name__ == "__main__":
-    main()
