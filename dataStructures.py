@@ -1,5 +1,9 @@
 from typing import Optional
 
+
+class StackUnderFlow(Exception):
+    pass
+
 class Node:
 
     def __init__(self, data, doublyLinked: bool = False) -> None:
@@ -33,12 +37,12 @@ class LinkedList:
             return
 
         
-        head = Node(data=nodes.pop(0), doublyLinked=doublyLinked)
+        head = Node(data=nodes[0], doublyLinked=doublyLinked)
         self.head = head
 
         currentNode = self.head
 
-        for i in range(len(nodes)):
+        for i in range(1,len(nodes)):
 
             currentNode.next = Node(data=nodes[i], doublyLinked=doublyLinked)
             nextNode = currentNode.next
@@ -141,11 +145,14 @@ class LinkedList:
 
         if self.head is None:
             return
-        
+
+        oldHead = self.head 
         self.head = self.head.next
 
         if self.doublyLinked and self.head is not None:
             self.head.prev = None
+
+        return oldHead
 
     def reverse(self):
 
@@ -170,8 +177,41 @@ class LinkedList:
 
 class Stack: 
 
-    def __init__(self, elements) -> None:
-        pass
+    def __init__(self, elements: Optional[list] = None):
+        '''Implemlents a Stack from a list of elements, via a reversed linked list. Note, top is zero indexed, sp self.top = -1 refers to an empty stack'''
+
+        if elements is None:
+            self.top = -1
+            self.elements = LinkedList()
+            return
+
+        self.top = len(elements) - 1
+        self.elements = LinkedList(elements)
+        self.elements.reverse()
+
+    def __eq__(self, __o: object) -> bool:
+        
+        return self.elements == __o.elements
+
+    def isEmpty(self):
+        return self.top == -1
+
+    def pop(self):
+
+        if self.isEmpty():
+            raise StackUnderFlow()
+        
+        self.top -= 1
+        return self.elements.pop()
+
+    def push(self, element: Node):
+
+        self.top +=1
+        self.elements.addFirst(node=element)
+
+
+
+
         
 
 
@@ -203,4 +243,3 @@ class TwoSum:
         return None
 
         
-

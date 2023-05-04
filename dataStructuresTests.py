@@ -1,4 +1,4 @@
-from dataStructures import Node, LinkedList
+from dataStructures import Node, LinkedList, Stack, TwoSum
 import unittest
 
 
@@ -327,6 +327,75 @@ class LinkedListTests(unittest.TestCase):
             
             self.assertEqual(correctReversedLists[i], self.testLinkedLists[i])
             self.testLinkedLists[i] = currentLL
+
+class StackTests(unittest.TestCase):
+
+    def __init__(self, methodName: str = ...) -> None:
+
+        super().__init__(methodName)
+        self.testStacks = [
+            Stack(), 
+            Stack([1,2,3]), 
+            Stack(["a", "b", 1, 4, 6]), 
+            Stack([0 for _ in range(10)]), 
+            Stack([])
+        ]
+
+    def testDunderEq(self):
+
+        others = [
+            [
+                Stack(),
+                Stack([]), 
+                Stack([1])
+            ], 
+            [
+                Stack([1,2,3]), 
+                Stack([1,2,4]), 
+                Stack([3,2,1]), 
+                Stack([1,2])
+            ], 
+            [
+                Stack(["a", "b", 1, 4, 6]), 
+                Stack(["a", "b", 1, 6]), 
+                Stack([6, 4, 1, "b", "a"]), 
+                Stack(["a", "c", 1, 4, 6]), 
+            ],
+
+            [
+                Stack([0 for _ in range(10)]), 
+                Stack([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), 
+                Stack([1, 0, 0, 0, 0, 0, 0, 0, 0, 0]), 
+                Stack([0, 0, 0, 0, 0, 0, 0, 0, 0])
+            ], 
+
+            [
+                Stack([]), 
+                Stack(), 
+                Stack([1])
+            ],
+
+            ]
+
+        othersEquiv = [
+            [True, True, False], 
+            [True, False, False, False],
+            [True, False, False, False],
+            [True, True, False, False],
+            [True, True, False]
+            ]
+
+        for i in range(len(self.testStacks)):
+            for j in range(len(others[i])):
+                self.assertEqual(self.testStacks[i] == others[i][j], othersEquiv[i][j])
+
+    
+    def testIsEmpty(self): 
+
+        empty = [True, False, False, False, True]
+
+        for i in range(len(self.testStacks)):
+            self.assertEqual(empty[i], self.testStacks[i].isEmpty())
 
 
 
