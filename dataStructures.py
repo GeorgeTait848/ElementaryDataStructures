@@ -140,6 +140,8 @@ class LinkedList:
         if self.doublyLinked:
             currentNode.next.prev = currentNode
 
+        return 
+
 
     def pop(self):
 
@@ -208,6 +210,11 @@ class Stack:
 
         self.top +=1
         self.elements.addFirst(node=element)
+
+class Queue: 
+    def __init__(self) -> None:
+        pass
+    
 
 
 

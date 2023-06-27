@@ -1,4 +1,4 @@
-from dataStructures import Node, LinkedList, Stack, TwoSum
+from dataStructures import Node, LinkedList, Stack, Queue
 import unittest
 
 
@@ -413,3 +413,64 @@ def main():
 if __name__ == "__main__":
     main()
 
+
+
+class QueueTests(unittest.TestCase):
+    def __init__(self, methodName: str = ...) -> None:
+        super().__init__(methodName)
+
+        self.testQueues = [
+            Queue(),
+            Queue([]), 
+            Queue([1]), 
+            Queue(["a", "b", "c", "d"]), 
+            Queue([1, "xyz", 2, "a", "b"])
+        ]
+
+    def testDunderEq(self):
+
+        others = [
+            [
+                Queue(), 
+                Queue([]), 
+                Queue(None), 
+                Queue([0])
+            ], 
+            [
+                Queue([]), 
+                Queue(), 
+                Queue(None), 
+                Queue([2])], 
+            [
+                Queue([1]), 
+                Queue([]), 
+                Queue([0]), 
+                Queue([1,2])
+            ], 
+            [
+                Queue(["a", "b", "c", "d"]), 
+                Queue(["a", "b", "c"]), 
+                Queue(["a", "b", "c", "d", "d"]), 
+            ], 
+            [
+                Queue([1, "xyz", 2, "a", "b"]), 
+                Queue([1, "xyz", 2, "a"]), 
+                Queue([1, "xyz", 2, "a", "b", "b"]), 
+                Queue(["xyz", 2, "a", "b"])
+            ]
+        ]
+
+        othersEquiv = [
+                [True, True, True, False]
+                [True, True, True, False], 
+                [True, False, False, False],
+                [True, False, False], 
+                [True, False, False]   
+            ]
+
+        for i in range(len(self.testQueues)):
+            for j in range(len(others[i])):
+                self.assertEqual(self.testQueues[i] == others[i][j], othersEquiv[i][j])
+
+        
+        
