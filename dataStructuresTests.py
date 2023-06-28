@@ -1,4 +1,5 @@
 from dataStructures import Node, LinkedList, Stack, Queue
+from dataStructures import StackUnderFlow, QueueOverflow, QueueUnderflow
 import unittest
 
 
@@ -398,7 +399,60 @@ class StackTests(unittest.TestCase):
             self.assertEqual(empty[i], self.testStacks[i].isEmpty())
 
 
+class QueueTests(unittest.TestCase):
 
+    def test_empty_queue(self):
+        queue = Queue()
+        self.assertEqual(queue.head, 0)
+        self.assertEqual(queue.tail, 0)
+        self.assertEqual(len(queue.elements), 0)
+    
+    def test_enqueue_dequeue(self):
+        queue = Queue()
+        queue.enqueue(1)
+        queue.enqueue(2)
+        queue.enqueue(3)
+        self.assertEqual(queue.dequeue(), {0: 1})
+        self.assertEqual(queue.dequeue(), {1: 2})
+        self.assertEqual(queue.dequeue(), {2: 3})
+    
+    def test_queue_with_initial_elements(self):
+        elements = [4, 5, 6]
+        queue = Queue(elements)
+        self.assertEqual(queue.head, 0)
+        self.assertEqual(queue.tail, len(elements))
+        self.assertEqual(len(queue.elements), len(elements))
+        for i, element in enumerate(elements):
+            self.assertEqual(queue[i], element)
+
+    def test_queue_overflow_init(self):
+        elements = [1, 2, 3]
+        with self.assertRaises(QueueOverflow):
+            _ = Queue(elements, maxLength=2)
+
+    def test_enqueue_overflow(self): 
+        queue = Queue([1,2,3,4], maxLength=4)
+        with self.assertRaises(QueueOverflow): 
+            queue.enqueue(5)
+
+    def test_boundary_case(self): 
+        queue = Queue([1,2,3,4], maxLength=4)
+        _ = queue.dequeue()
+        queue.enqueue(5)
+        self.assertEqual(queue.elements, Queue([5,2,3,4]).elements)
+
+        q2 = Queue([3,4,2,1], maxLength=4)
+        q2.dequeue()
+        q2.dequeue()
+        q2.enqueue(9)
+        self.assertEqual(q2.elements, {0:9, 2:2, 3:1})
+
+            
+        
+    def test_queue_underflow(self):
+        queue = Queue()
+        with self.assertRaises(QueueUnderflow):
+            queue.dequeue()
             
 
         
@@ -415,62 +469,3 @@ if __name__ == "__main__":
 
 
 
-class QueueTests(unittest.TestCase):
-    def __init__(self, methodName: str = ...) -> None:
-        super().__init__(methodName)
-
-        self.testQueues = [
-            Queue(),
-            Queue([]), 
-            Queue([1]), 
-            Queue(["a", "b", "c", "d"]), 
-            Queue([1, "xyz", 2, "a", "b"])
-        ]
-
-    def testDunderEq(self):
-
-        others = [
-            [
-                Queue(), 
-                Queue([]), 
-                Queue(None), 
-                Queue([0])
-            ], 
-            [
-                Queue([]), 
-                Queue(), 
-                Queue(None), 
-                Queue([2])], 
-            [
-                Queue([1]), 
-                Queue([]), 
-                Queue([0]), 
-                Queue([1,2])
-            ], 
-            [
-                Queue(["a", "b", "c", "d"]), 
-                Queue(["a", "b", "c"]), 
-                Queue(["a", "b", "c", "d", "d"]), 
-            ], 
-            [
-                Queue([1, "xyz", 2, "a", "b"]), 
-                Queue([1, "xyz", 2, "a"]), 
-                Queue([1, "xyz", 2, "a", "b", "b"]), 
-                Queue(["xyz", 2, "a", "b"])
-            ]
-        ]
-
-        othersEquiv = [
-                [True, True, True, False]
-                [True, True, True, False], 
-                [True, False, False, False],
-                [True, False, False], 
-                [True, False, False]   
-            ]
-
-        for i in range(len(self.testQueues)):
-            for j in range(len(others[i])):
-                self.assertEqual(self.testQueues[i] == others[i][j], othersEquiv[i][j])
-
-        
-        

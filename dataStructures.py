@@ -4,6 +4,12 @@ from typing import Optional
 class StackUnderFlow(Exception):
     pass
 
+class QueueUnderflow(Exception):
+    pass
+
+class QueueOverflow(Exception):
+    pass
+
 class Node:
 
     def __init__(self, data, doublyLinked: bool = False) -> None:
@@ -180,16 +186,26 @@ class LinkedList:
 class Stack: 
 
     def __init__(self, elements: Optional[list] = None):
-        '''Implemlents a Stack from a list of elements, via a reversed linked list. Note, top is zero indexed, sp self.top = -1 refers to an empty stack'''
+        '''Implemlents a Stack from a list of elements, via a dictionary. Note, top is zero indexed, sp self.top = -1 refers to an empty stack. We are not yet 
+        considering stack overflows'''
 
         if elements is None:
             self.top = -1
-            self.elements = LinkedList()
+            self.elements = {}
             return
 
         self.top = len(elements) - 1
-        self.elements = LinkedList(elements)
-        self.elements.reverse()
+        self.elements = {}
+
+        for i in range(len(elements)):
+            self.elements[i] = elements[i]
+
+        def __getitem__(self, index):
+            return self.elements[index]
+        
+        def __setitem(self, index, item):
+            self.elements[index] = item
+
 
     def __eq__(self, __o: object) -> bool:
         
@@ -204,22 +220,85 @@ class Stack:
             raise StackUnderFlow()
         
         self.top -= 1
-        return self.elements.pop()
+        return self.elements.pop(self.top + 1)
 
-    def push(self, element: Node):
+    def push(self, element):
 
         self.top +=1
-        self.elements.addFirst(node=element)
+        self[self.top] = element
 
 class Queue: 
-    def __init__(self) -> None:
-        pass
-    
+    '''Represents a Queue data structure with zero indexed head and tail, implemented using dictionaries.'''
 
+    def __init__(self, elements: Optional[list] = None, maxLength: int = 1e6):
 
-
-
+        if elements is None: 
+            self.head, self.tail = 0,0
+            self.elements = {}
+            self.maxLength = maxLength
+            return
         
+        if len(elements) > maxLength: 
+            raise QueueOverflow()
+
+        self.elements = {}
+        self.head = 0
+        self.maxLength = maxLength
+        self.tail = len(elements) if len(elements) < maxLength else -1
+        
+        for i in range(len(elements)):
+            self.elements[i] = elements[i]
+
+    def __eq__(self, __o: object) -> bool:
+        return self.head == __o.head and self.tail == __o.tail and self.elements == __o.elements
+
+    
+    def __getitem__(self, index: int):
+        return self.elements[index]
+    
+    def __setitem__(self, index: int, item): 
+        self.elements[index] = item
+
+    def __contains__(self, item): 
+        return item in self.elements
+        
+
+    def enqueue(self, item): 
+
+        if self.head == self.tail + 1:
+            raise QueueOverflow()
+
+        if self.tail == -1: 
+            #due to the previous if statement, we know self.head != 0
+            self.tail = 0
+
+        self[self.tail] = item
+        
+        if self.tail == self.maxLength:
+            if self.head == 0:
+                self.tail = -1
+                return
+
+        self.tail +=1
+
+    def dequeue(self): 
+        if self.head == self.tail:
+            raise QueueUnderflow()
+        
+        val = self.elements.pop(self.head)
+        prevHead = self.head
+
+        if self.head == self.maxLength:
+            self.head = 0
+            return
+        
+        self.head +=1
+
+        return {prevHead: val}
+        
+
+
+    
 
 
 class TwoSum: 
