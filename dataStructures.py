@@ -186,8 +186,8 @@ class LinkedList:
 class Stack: 
 
     def __init__(self, elements: Optional[list] = None):
-        '''Implemlents a Stack from a list of elements, via a dictionary. Note, top is zero indexed, sp self.top = -1 refers to an empty stack. We are not yet 
-        considering stack overflows'''
+        '''Implemlents a Stack from a list of elements, via a dictionary. The final element in elements is the top of the stack. Note, top is zero indexed, sp self.top = -1 refers to an empty stack. We are not yet 
+        considering stack overflows.'''
 
         if elements is None:
             self.top = -1
@@ -200,10 +200,10 @@ class Stack:
         for i in range(len(elements)):
             self.elements[i] = elements[i]
 
-        def __getitem__(self, index):
+    def __getitem__(self, index):
             return self.elements[index]
         
-        def __setitem(self, index, item):
+    def __setitem__(self, index, item):
             self.elements[index] = item
 
 
