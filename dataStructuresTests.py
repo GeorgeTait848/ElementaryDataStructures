@@ -1,5 +1,5 @@
-from dataStructures import Node, LinkedList, Stack, Queue
-from dataStructures import StackUnderFlow, QueueOverflow, QueueUnderflow
+from dataStructures import *
+
 import unittest
 
 
@@ -182,8 +182,8 @@ class LinkedListTests(unittest.TestCase):
     def testAddFirst(self):
 
         nodes = [
-            Node(0),
-            Node("x"),
+            LinkedListNode(0),
+            LinkedListNode("x"),
         ]
 
         correctListsAfterAdding = [
@@ -254,7 +254,7 @@ class LinkedListTests(unittest.TestCase):
 
     def testAddLast(self): 
 
-        addLastNode = Node(0)
+        addLastNode = LinkedListNode(0)
 
         correctAddedLastNodeLists = [
             LinkedList([0]),
@@ -489,7 +489,107 @@ class QueueTests(unittest.TestCase):
         queue = Queue()
         with self.assertRaises(QueueUnderflow):
             queue.dequeue()
-            
+
+
+class BinaryTreeTest(unittest.TestCase):
+    def test_empty_binary_tree(self):
+        binary_tree = BinaryTree()
+        self.assertIsNone(binary_tree.root)
+        self.assertEqual(str(binary_tree), "None")
+
+    def test_single_node_binary_tree(self):
+        nodes = {'key': 5}
+        binary_tree = BinaryTree(nodes)
+        self.assertEqual(binary_tree.root.key, 5)
+        self.assertIsNone(binary_tree.root.left)
+        self.assertIsNone(binary_tree.root.right)
+        self.assertIsNone(binary_tree.root.parent)
+        self.assertEqual(str(binary_tree), "5")
+
+    def test_binary_tree_with_left_child(self):
+        nodes = {'key': 5, 'left': {'key': 3}}
+        binary_tree = BinaryTree(nodes)
+        self.assertEqual(binary_tree.root.key, 5)
+        self.assertEqual(binary_tree.root.left.key, 3)
+        self.assertIsNone(binary_tree.root.right)
+        self.assertIsNone(binary_tree.root.parent)
+        self.assertEqual(binary_tree.root.left.parent, binary_tree.root)
+        self.assertEqual(str(binary_tree), "5, 3")
+
+    def test_binary_tree_with_right_child(self):
+        nodes = {'key': 5, 'right': {'key': 7}}
+        binary_tree = BinaryTree(nodes)
+        self.assertEqual(binary_tree.root.key, 5)
+        self.assertEqual(binary_tree.root.right.key, 7)
+        self.assertIsNone(binary_tree.root.left)
+        self.assertIsNone(binary_tree.root.parent)
+        self.assertEqual(binary_tree.root.right.parent, binary_tree.root)
+        self.assertEqual(str(binary_tree), "5, 7")
+
+    def test_binary_tree_with_left_and_right_children(self):
+        nodes = {'key': 5, 'left': {'key': 3}, 'right': {'key': 7}}
+        binary_tree = BinaryTree(nodes)
+        self.assertEqual(binary_tree.root.key, 5)
+        self.assertEqual(binary_tree.root.left.key, 3)
+        self.assertEqual(binary_tree.root.right.key, 7)
+        self.assertIsNone(binary_tree.root.parent)
+        self.assertEqual(binary_tree.root.left.parent, binary_tree.root)
+        self.assertEqual(binary_tree.root.right.parent, binary_tree.root)
+        self.assertEqual(str(binary_tree), "5, 3, 7")
+
+    def test_binary_tree_with_multiple_generations(self): 
+        nodes = {
+            'key': 18, 
+            'left': {
+                'key': 12, 
+                'left': {'key': 7},
+                'right': {'key': 4, 'left': {'key': 5}}
+            }, 
+
+            'right': {
+                'key': 10, 
+                'left': {'key': 2}, 
+                'right': {'key': 21}
+            }
+        }
+
+        tree = BinaryTree(nodes)
+
+        self.assertEqual(tree.root.key, 18)
+        self.assertIsNone(tree.root.parent)
+
+        self.assertEqual(tree.root.left.key, 12)
+        self.assertEqual(tree.root.left.parent, tree.root)
+
+        self.assertEqual(tree.root.left.left.key, 7)
+        self.assertEqual(tree.root.left.left.parent, tree.root.left)
+        self.assertIsNone(tree.root.left.left.left)
+        self.assertIsNone(tree.root.left.left.right)
+
+
+        self.assertEqual(tree.root.left.right.key, 4)
+        self.assertEqual(tree.root.left.right.parent, tree.root.left)
+        self.assertIsNone(tree.root.left.right.right)
+
+        self.assertEqual(tree.root.left.right.left.key, 5)
+        self.assertEqual(tree.root.left.right.left.parent, tree.root.left.right)
+        self.assertIsNone(tree.root.left.right.left.left)
+        self.assertIsNone(tree.root.left.right.left.right)
+
+        self.assertEqual(tree.root.right.key, 10)
+        self.assertEqual(tree.root.right.parent, tree.root)
+
+        self.assertEqual(tree.root.right.left.key, 2)
+        self.assertEqual(tree.root.right.left.parent, tree.root.right)
+        self.assertIsNone(tree.root.right.left.left)
+        self.assertIsNone(tree.root.right.left.right)
+
+        self.assertEqual(tree.root.right.right.key, 21)
+        self.assertEqual(tree.root.right.right.parent, tree.root.right)
+        self.assertIsNone(tree.root.right.right.left)
+        self.assertIsNone(tree.root.right.right.right)
+        self.assertEqual(str(tree), "18, 12, 7, 4, 5, 10, 2, 21")
+
 
         
 

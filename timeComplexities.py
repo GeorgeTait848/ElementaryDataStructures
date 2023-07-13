@@ -1,5 +1,5 @@
 import time
-from dataStructures import LinkedList, Node, TwoSum
+from dataStructures import LinkedList, LinkedListNode, TwoSum
 import plotly.graph_objects as go
 import inspect
 import numpy as np
@@ -123,7 +123,7 @@ def main():
 
     lens = [1_000, 10_000, 50_000, 100_000, 500_000, 1_000_000, 5_000_000, 10_000_000]
 
-    plotTimeComplexity(LinkedList, 'addFirst', lens, node=Node(0))
+    plotTimeComplexity(LinkedList, 'addFirst', lens, node=LinkedListNode(0))
     # plotTimeComplexity(LinkedList, 'reverse', lens)
     # plotTimeComplexity(LinkedList, 'addLast', lens, node=Node(0))
     # plotTimeComplexity(LinkedList, 'pop', lens)

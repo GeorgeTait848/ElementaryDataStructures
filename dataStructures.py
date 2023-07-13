@@ -10,7 +10,10 @@ class QueueUnderflow(Exception):
 class QueueOverflow(Exception):
     pass
 
-class Node:
+class ImproperKeysForBinaryTree(Exception):
+    pass
+
+class LinkedListNode:
 
     def __init__(self, data, doublyLinked: bool = False) -> None:
         
@@ -30,7 +33,7 @@ class Node:
 
         return self.data == __o.data
         
-
+ 
 
 class LinkedList:
 
@@ -43,14 +46,14 @@ class LinkedList:
             return
 
         
-        head = Node(data=nodes[0], doublyLinked=doublyLinked)
+        head = LinkedListNode(data=nodes[0], doublyLinked=doublyLinked)
         self.head = head
 
         currentNode = self.head
 
         for i in range(1,len(nodes)):
 
-            currentNode.next = Node(data=nodes[i], doublyLinked=doublyLinked)
+            currentNode.next = LinkedListNode(data=nodes[i], doublyLinked=doublyLinked)
             nextNode = currentNode.next
 
             if doublyLinked:
@@ -115,7 +118,7 @@ class LinkedList:
             
         return True
 
-    def addFirst(self, node: Node):
+    def addFirst(self, node: LinkedListNode):
         
         node.next = self.head
 
@@ -128,7 +131,7 @@ class LinkedList:
         self.head = node
     
     
-    def addLast(self, node: Node):
+    def addLast(self, node: LinkedListNode):
 
         if self.head is None:
             self.head = node
@@ -269,7 +272,6 @@ class Queue:
             raise QueueOverflow()
 
         if self.tail == -1: 
-            #due to the previous if statement, we know self.head != 0
             self.tail = 0
 
         self[self.tail] = item
@@ -295,14 +297,93 @@ class Queue:
         self.head +=1
 
         return {prevHead: val}
+
+class BinaryTreeNode: 
+
+    def __init__(self, key: Optional[any] = None) -> None:
+
+        self.key = key
+        self.left = None
+        self.right = None
+        self.parent = None
+
+    def __eq__(self, __o: object) -> bool:
+        return self.key == __o.key
+    
+    def addLeft(self, data):
+        self.left = BinaryTreeNode(data)
+
+    def addRight(self, data): 
+        self.right = BinaryTreeNode(data)
+
+    def __str__(self) -> str:
+        return '<BinaryTreeNode key: {}>'.format(self.key)
+
+
+class BinaryTree: 
+
+    def __init__(self, nodes: Optional[dict] = None):
+
+        if nodes is None:
+            self.root = None
+            return 
+        
+        self.root = self._initHelper(nodes)
+
+    
+    def _initHelper(self, nodes: dict): 
+
+        if 'left' not in nodes and 'right' not in nodes:
+            return BinaryTreeNode(nodes['key'])
+
+        if 'left' in nodes and 'right' not in nodes:
+
+            newNode = BinaryTreeNode(nodes['key'])
+            newNode.left = self._initHelper(nodes['left'])
+            newNode.left.parent = newNode
+            return newNode
+        
+        if 'left' not in nodes and 'right' in nodes:
+
+            newNode = BinaryTreeNode(nodes['key'])
+            newNode.right = self._initHelper(nodes['right'])
+            newNode.right.parent = newNode
+            return newNode
+        
+
+        newNode = BinaryTreeNode(nodes['key'])
+        newNode.right = self._initHelper(nodes['right'])
+        newNode.right.parent = newNode
+
+        newNode.left = self._initHelper(nodes['left'])
+        newNode.left.parent = newNode
+
+        return newNode
+
+    def __str__(self) -> str:
+        return self._strHelper(self.root)
+
+    def _strHelper(self, node: BinaryTreeNode) -> str:
+        
+        if node is None: 
+            return str(None)
+        
+        if node.left is None and node.right is None: 
+            return str(node.key)
+        
+        if node.left is not None and node.right is None: 
+            return "{}, {}".format(node.key, self._strHelper(node.left))
+        
+        if node.left is None and node.right is not None: 
+            return "{}, {}".format(node.key, self._strHelper(node.right))
+        
+        return "{}, {}, {}".format(node.key, self._strHelper(node.left), self._strHelper(node.right))
+            
         
 
 
-    
-
-
 class TwoSum: 
-    def __init__(self, elements: Optional[list[int]]) -> None:
+    def __init__(self, elements: Optional[list[int]] = None) -> None:
         
         self.elements = elements
     
