@@ -118,6 +118,9 @@ class LinkedList:
             
         return True
 
+    def __bool__(self): 
+        return self.head is not None
+
     def addFirst(self, node: LinkedListNode):
         
         node.next = self.head
@@ -214,12 +217,12 @@ class Stack:
         
         return self.elements == __o.elements
 
-    def isEmpty(self):
-        return self.top == -1
+    def __bool__(self):
+        return self.elements != {}
 
     def pop(self):
-
-        if self.isEmpty():
+        
+        if not self.__bool__():
             raise StackUnderFlow()
         
         self.top -= 1
@@ -264,6 +267,12 @@ class Queue:
 
     def __contains__(self, item): 
         return item in self.elements
+
+    def __bool__(self): 
+        return self.head != self.tail
+
+    def __len__(self): 
+        return len(self.elements)
         
 
     def enqueue(self, item): 
@@ -296,7 +305,7 @@ class Queue:
         
         self.head +=1
 
-        return {prevHead: val}
+        return (prevHead, val)
 
 class BinaryTreeNode: 
 
@@ -322,44 +331,31 @@ class BinaryTreeNode:
 
 class BinaryTree: 
 
-    def __init__(self, nodes: Optional[dict] = None):
+    def __init__(self, nodes: Optional[list] = None):
 
-        if nodes is None:
+        if not nodes:
             self.root = None
             return 
         
-        self.root = self._initHelper(nodes)
-
+        self.root = self._initHelper(nodes, 0)
     
-    def _initHelper(self, nodes: dict): 
 
-        if 'left' not in nodes and 'right' not in nodes:
-            return BinaryTreeNode(nodes['key'])
+    def _initHelper(self, nodes: list, i: int, parent: Optional[BinaryTreeNode] = None):
 
-        if 'left' in nodes and 'right' not in nodes:
+        if i >= len(nodes):
+            return None
 
-            newNode = BinaryTreeNode(nodes['key'])
-            newNode.left = self._initHelper(nodes['left'])
-            newNode.left.parent = newNode
-            return newNode
-        
-        if 'left' not in nodes and 'right' in nodes:
+        if nodes[i] is None: 
+            return None
 
-            newNode = BinaryTreeNode(nodes['key'])
-            newNode.right = self._initHelper(nodes['right'])
-            newNode.right.parent = newNode
-            return newNode
-        
-
-        newNode = BinaryTreeNode(nodes['key'])
-        newNode.right = self._initHelper(nodes['right'])
-        newNode.right.parent = newNode
-
-        newNode.left = self._initHelper(nodes['left'])
-        newNode.left.parent = newNode
+        newNode = BinaryTreeNode(nodes[i])
+        newNode.parent = parent
+        newNode.left = self._initHelper(nodes, 2*i + 1, newNode)
+        newNode.right = self._initHelper(nodes, 2*i + 2, newNode)
 
         return newNode
-
+ 
+ 
     def __str__(self) -> str:
         return self._strHelper(self.root)
 
@@ -378,8 +374,33 @@ class BinaryTree:
             return "{}, {}".format(node.key, self._strHelper(node.right))
         
         return "{}, {}, {}".format(node.key, self._strHelper(node.left), self._strHelper(node.right))
+
+    
+    def getWidth(self): 
+
+        idx, leftmostidx = 0,0
+        lvl, prevlvl = 0,0
+
+        nodesQueue = Queue([(self.root, idx, lvl)])
+        maxWidth = 0
+
+        while nodesQueue:
+            _, (node, idx, lvl) = nodesQueue.dequeue()
+
+            if lvl > prevlvl: 
+                prevlvl = lvl
+                idx = leftmostidx
             
+            maxWidth = max(maxWidth, idx - leftmostidx + 1)
+
+            if node.left: 
+                nodesQueue.enqueue((node.left, 2*idx, lvl + 1))
+            
+            if node.right:
+                nodesQueue.enqueue((node.right, 2*idx + 1, lvl + 1))
         
+
+        return maxWidth
 
 
 class TwoSum: 
@@ -409,4 +430,3 @@ class TwoSum:
         
         return None
 
-        

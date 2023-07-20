@@ -391,28 +391,28 @@ class StackTests(unittest.TestCase):
                 self.assertEqual(self.testStacks[i] == others[i][j], othersEquiv[i][j])
 
     
-    def testIsEmpty(self): 
+    def testBool(self): 
 
-        empty = [True, False, False, False, True]
+        bools = [False, True, True, True, False]
 
         for i in range(len(self.testStacks)):
-            self.assertEqual(empty[i], self.testStacks[i].isEmpty())
+            self.assertEqual(bools[i], self.testStacks[i].__bool__())
 
     def test_push_pop(self):
         stack = Stack()
         stack.push(10)
         stack.push(20)
         stack.push(30)
-        self.assertFalse(stack.isEmpty())
+        self.assertTrue(stack.__bool__())
         self.assertEqual(stack.pop(), 30)
         self.assertEqual(stack.pop(), 20)
         self.assertEqual(stack.pop(), 10)
-        self.assertTrue(stack.isEmpty())
+        self.assertFalse(stack.__bool__())
 
     def test_stack_with_initial_elements(self):
         elements = [40, 50, 60]
         stack = Stack(elements)
-        self.assertFalse(stack.isEmpty())
+        self.assertTrue(stack.__bool__())
         for i, element in enumerate(elements):
             self.assertEqual(stack[i], element)
         self.assertEqual(len(stack.elements), len(elements))
@@ -422,12 +422,6 @@ class StackTests(unittest.TestCase):
         stack[1] = 85
         self.assertEqual(stack[1], 85)
 
-    def test_equality(self):
-        stack1 = Stack([100, 200, 300])
-        stack2 = Stack([100, 200, 300])
-        stack3 = Stack([400, 500, 600])
-        self.assertEqual(stack1, stack2)
-        self.assertNotEqual(stack1, stack3)
 
     def test_pop_empty_stack(self):
         stack = Stack()
@@ -441,16 +435,16 @@ class QueueTests(unittest.TestCase):
         queue = Queue()
         self.assertEqual(queue.head, 0)
         self.assertEqual(queue.tail, 0)
-        self.assertEqual(len(queue.elements), 0)
+        self.assertEqual(len(queue), 0)
     
     def test_enqueue_dequeue(self):
         queue = Queue()
         queue.enqueue(1)
         queue.enqueue(2)
         queue.enqueue(3)
-        self.assertEqual(queue.dequeue(), {0: 1})
-        self.assertEqual(queue.dequeue(), {1: 2})
-        self.assertEqual(queue.dequeue(), {2: 3})
+        self.assertEqual(queue.dequeue(), (0,1))
+        self.assertEqual(queue.dequeue(), (1,2))
+        self.assertEqual(queue.dequeue(), (2,3))
     
     def test_queue_with_initial_elements(self):
         elements = [4, 5, 6]
@@ -490,6 +484,19 @@ class QueueTests(unittest.TestCase):
         with self.assertRaises(QueueUnderflow):
             queue.dequeue()
 
+    
+    def test_bool(self): 
+        q = Queue()
+        self.assertEqual(q.__bool__(), False)
+
+        q1 = Queue([1,2,3])
+        self.assertEqual(q1.__bool__(), True)
+
+        for _ in range(3): 
+           _,_ = q1.dequeue()
+        
+        self.assertEqual(q1.__bool__(), False)
+
 
 class BinaryTreeTest(unittest.TestCase):
     def test_empty_binary_tree(self):
@@ -498,7 +505,7 @@ class BinaryTreeTest(unittest.TestCase):
         self.assertEqual(str(binary_tree), "None")
 
     def test_single_node_binary_tree(self):
-        nodes = {'key': 5}
+        nodes = [5]
         binary_tree = BinaryTree(nodes)
         self.assertEqual(binary_tree.root.key, 5)
         self.assertIsNone(binary_tree.root.left)
@@ -507,7 +514,7 @@ class BinaryTreeTest(unittest.TestCase):
         self.assertEqual(str(binary_tree), "5")
 
     def test_binary_tree_with_left_child(self):
-        nodes = {'key': 5, 'left': {'key': 3}}
+        nodes = [5,3]
         binary_tree = BinaryTree(nodes)
         self.assertEqual(binary_tree.root.key, 5)
         self.assertEqual(binary_tree.root.left.key, 3)
@@ -517,7 +524,7 @@ class BinaryTreeTest(unittest.TestCase):
         self.assertEqual(str(binary_tree), "5, 3")
 
     def test_binary_tree_with_right_child(self):
-        nodes = {'key': 5, 'right': {'key': 7}}
+        nodes = [5,None,7]
         binary_tree = BinaryTree(nodes)
         self.assertEqual(binary_tree.root.key, 5)
         self.assertEqual(binary_tree.root.right.key, 7)
@@ -527,7 +534,7 @@ class BinaryTreeTest(unittest.TestCase):
         self.assertEqual(str(binary_tree), "5, 7")
 
     def test_binary_tree_with_left_and_right_children(self):
-        nodes = {'key': 5, 'left': {'key': 3}, 'right': {'key': 7}}
+        nodes = [5,3,7]
         binary_tree = BinaryTree(nodes)
         self.assertEqual(binary_tree.root.key, 5)
         self.assertEqual(binary_tree.root.left.key, 3)
@@ -538,20 +545,7 @@ class BinaryTreeTest(unittest.TestCase):
         self.assertEqual(str(binary_tree), "5, 3, 7")
 
     def test_binary_tree_with_multiple_generations(self): 
-        nodes = {
-            'key': 18, 
-            'left': {
-                'key': 12, 
-                'left': {'key': 7},
-                'right': {'key': 4, 'left': {'key': 5}}
-            }, 
-
-            'right': {
-                'key': 10, 
-                'left': {'key': 2}, 
-                'right': {'key': 21}
-            }
-        }
+        nodes = [18,12,10,7,4,2,21,None,None,5]
 
         tree = BinaryTree(nodes)
 
@@ -589,6 +583,23 @@ class BinaryTreeTest(unittest.TestCase):
         self.assertIsNone(tree.root.right.right.left)
         self.assertIsNone(tree.root.right.right.right)
         self.assertEqual(str(tree), "18, 12, 7, 4, 5, 10, 2, 21")
+
+    def test_width(self): 
+
+        treesNodes = [
+            [18,12,10,7,4,2,21,None,5],
+            [12,3,2,5,3,None,9], 
+            [1,3,2,5,None,None,9,6,None,None,None,None,None,7], 
+            [1,3,2,5]
+        ]
+
+        widths = [4,4,7,2]
+
+        for i in range(len(treesNodes)): 
+            print('\n')
+            print('i =', i)
+            currTree = BinaryTree(treesNodes[i])
+            self.assertEqual(currTree.getWidth(), widths[i])
 
 
         
