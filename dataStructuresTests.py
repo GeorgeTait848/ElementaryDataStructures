@@ -587,7 +587,7 @@ class BinaryTreeTest(unittest.TestCase):
     def test_width(self): 
 
         treesNodes = [
-            [18,12,10,7,4,2,21,None,5],
+            [18,12,10,7,4,2,21,None, None,5],
             [12,3,2,5,3,None,9], 
             [1,3,2,5,None,None,9,6,None,None,None,None,None,7], 
             [1,3,2,5]
@@ -601,6 +601,147 @@ class BinaryTreeTest(unittest.TestCase):
             currTree = BinaryTree(treesNodes[i])
             self.assertEqual(currTree.getWidth(), widths[i])
 
+
+    def test_pre_order_traversal(self): 
+
+        treesNodes = [
+            [18,12,10,7,4,2,21,None, None,5],
+            [12,3,2,5,3,None,9], 
+            [1,3,2,5,None,None,9,6,None,None,None,None,None,7], 
+            [1,3,2,5]
+        ]
+
+        expectedResults = [
+            [18,12,7,4,5,10,2,21], 
+            [12,3,5,3,2,9], 
+            [1,3,5,6,2,9,7], 
+            [1,3,5,2]
+        ]
+
+        for i in range(len(treesNodes)):
+            t = BinaryTree(treesNodes[i])
+
+            res = []
+            for n in t.preOrder():
+                res.append(n.key)
+            
+
+            self.assertEqual(res, expectedResults[i])
+
+    def test_in_order_traversal(self): 
+
+        treesNodes = [
+            [18,12,10,7,4,2,21,None, None,5],
+            [12,3,2,5,3,None,9], 
+            [1,3,2,5,None,None,9,6,None,None,None,None,None,7], 
+            [1,3,2,5]
+        ]
+
+        expectedResults = [
+            [7,12,5,4,18,2,10,21], 
+            [5,3,3,12,2,9], 
+            [6,5,3,1,2,7,9], 
+            [5,3,1,2]
+        ]
+
+        for i in range(len(treesNodes)):
+            t = BinaryTree(treesNodes[i])
+
+            res = []
+            for n in t.inOrder():
+                res.append(n.key)
+            
+
+            self.assertEqual(res, expectedResults[i])
+
+    def test_post_order_traversal(self): 
+
+        treesNodes = [
+            [18,12,10,7,4,2,21,None, None,5],
+            [12,3,2,5,3,None,9], 
+            [1,3,2,5,None,None,9,6,None,None,None,None,None,7], 
+            [1,3,2,5]
+        ]
+
+        expectedResults = [
+            [7,5,4,12,2,21,10,18], 
+            [5,3,3,9,2,12], 
+            [6,5,3,7,9,2,1], 
+            [5,3,2,1]
+        ]
+
+        for i in range(len(treesNodes)):
+            t = BinaryTree(treesNodes[i])
+
+            res = []
+            for n in t.postOrder():
+                res.append(n.key)
+            
+
+            self.assertEqual(res, expectedResults[i])
+
+class BSTTests(unittest.TestCase): 
+
+    def test_empty_BST(self): 
+        bst = BinarySearchTree()
+        self.assertIsNone(bst.root)
+    
+    def test_addNode(self): 
+
+        bst = BinarySearchTree()
+
+        bst.addNode(BinaryTreeNode(6))
+        self.assertEqual(bst.root.key, 6)
+
+        bst.addNode(BinaryTreeNode(5))
+        self.assertEqual(bst.root.left.key, 5)
+
+        bst.addNode(BinaryTreeNode(7))
+        self.assertEqual(bst.root.right.key, 7)
+
+        bst.addNode(BinaryTreeNode(2))
+        self.assertEqual(bst.root.left.left.key, 2)
+
+
+        bst.addNode(BinaryTreeNode(5))
+        self.assertEqual(bst.root.left.right.key, 5)
+
+        bst.addNode(BinaryTreeNode(8))
+        self.assertEqual(bst.root.right.right.key, 8)
+
+
+
+    def test_empty_tree_min_max(self):
+
+        bst = BinarySearchTree()
+        self.assertIsNone(bst.getMinimum())
+        self.assertIsNone(bst.getMaximum())
+
+    def test_single_node_min_max(self):
+
+
+        bst = BinarySearchTree([10])
+        self.assertEqual(bst.getMinimum().key, 10)
+        self.assertEqual(bst.getMaximum().key, 10)
+
+    def test_multiple_nodes_min_max(self):
+
+        bst = BinarySearchTree([10, 5, 15, 3, 7, 12, 20])
+        
+        self.assertEqual(bst.getMinimum().key, 3)
+        self.assertEqual(bst.getMaximum().key, 20)
+
+    def test_left_skewed_tree_min_max(self):
+        bst = BinarySearchTree([10, 9, 8, 7, 6, 5, 4, 3, 2, 1])
+        
+        self.assertEqual(bst.getMinimum().key, 1)
+        self.assertEqual(bst.getMaximum().key, 10)
+
+    def test_right_skewed_tree_min_max(self):
+        bst = BinarySearchTree([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+
+        self.assertEqual(bst.getMinimum().key, 1)
+        self.assertEqual(bst.getMaximum().key, 10)
 
         
 

@@ -1,4 +1,5 @@
 from typing import Optional
+from protocols import TreeTraversable
 
 
 class StackUnderFlow(Exception):
@@ -12,6 +13,8 @@ class QueueOverflow(Exception):
 
 class ImproperKeysForBinaryTree(Exception):
     pass
+
+
 
 class LinkedListNode:
 
@@ -328,8 +331,103 @@ class BinaryTreeNode:
     def __str__(self) -> str:
         return '<BinaryTreeNode key: {}>'.format(self.key)
 
+    def __bool__(self): 
+        return self is not None
 
-class BinaryTree: 
+
+
+
+class PreOrderIterator: 
+
+    def __init__(self, stack: Optional[Stack] = None):
+        self.s = stack
+
+    def __iter__(self):
+        return self
+    
+    def __next__(self): 
+
+        if not self.s: 
+            raise StopIteration
+
+        node = self.s.pop()
+
+        if node.right: 
+            self.s.push(node.right)
+
+        if node.left: 
+            self.s.push(node.left)
+        
+        return node
+
+class InOrderIterator:
+
+    def __init__(self, curr, stack: Optional[Stack] = None) -> None:
+        self.s = stack
+        self.curr = curr
+        
+
+    def __iter__(self): 
+        return self
+    
+    def __next__(self): 
+
+        if not self.s and not self.curr: 
+            raise StopIteration
+
+        if not self.curr: 
+
+            node = self.s.pop()
+
+            if node.right: 
+                self.s.push(node.right)
+
+            self.curr = node.right
+            return node
+        
+
+        if self.curr.left: 
+            self.s.push(self.curr.left)
+        
+        self.curr = self.curr.left
+        return self.__next__()
+        
+ 
+
+
+class PostOrderIterator: 
+    def __init__(self, stack: Optional[Stack] = None) -> None:
+        self.s = stack
+
+    def __iter__(self): 
+        return self
+    
+    def __next__(self): 
+
+        if not self.s: 
+            raise StopIteration
+        
+        curr, hasBeenVisited = self.s.pop()
+        
+        if hasBeenVisited:
+            return curr
+
+        self.s.push((curr, True))
+        
+        if curr.right: 
+            self.s.push((curr.right, False))
+        
+        if curr.left: 
+            self.s.push((curr.left, False))
+
+        
+        return self.__next__()
+
+
+        
+
+
+class BinaryTree(TreeTraversable): 
 
     def __init__(self, nodes: Optional[list] = None):
 
@@ -342,11 +440,9 @@ class BinaryTree:
 
     def _initHelper(self, nodes: list, i: int, parent: Optional[BinaryTreeNode] = None):
 
-        if i >= len(nodes):
+        if i >= len(nodes) or nodes[i] is None:
             return None
-
-        if nodes[i] is None: 
-            return None
+            
 
         newNode = BinaryTreeNode(nodes[i])
         newNode.parent = parent
@@ -402,6 +498,126 @@ class BinaryTree:
 
         return maxWidth
 
+    def preOrder(self) -> PreOrderIterator:
+
+        if self.root is None: 
+            return PreOrderIterator()
+        
+        return PreOrderIterator(Stack([self.root]))
+        
+
+    def inOrder(self) -> InOrderIterator:
+
+        if not self.root: 
+            return InOrderIterator(None)
+        
+        return InOrderIterator(self.root, Stack([self.root]))
+
+
+    def postOrder(self):
+        return PostOrderIterator(Stack([(self.root, False)]))
+
+
+
+
+class BinarySearchTree: 
+
+    def __init__(self, nodes: Optional[list] = None) -> None:
+        
+        if nodes is None or nodes == []: 
+            self.root = None
+            return
+        
+        self.root = BinaryTreeNode(nodes[0])
+
+        for val in nodes[1:]: 
+            self._addNode(BinaryTreeNode(val), self.root)
+
+        
+
+    def _addNode(self, toBeAddedNode: BinaryTreeNode, currNode: Optional[BinaryTreeNode] = None): 
+
+        if currNode is None: 
+            return toBeAddedNode
+
+        if toBeAddedNode.key == currNode.key: 
+
+            if currNode.left is None: 
+
+                currNode.left = toBeAddedNode
+                return
+            
+            if currNode.right is None: 
+                currNode.right = toBeAddedNode
+                return
+
+            self.addNode(toBeAddedNode, currNode.left)
+            
+            
+        if toBeAddedNode.key < currNode.key: 
+
+            if currNode.left is None:
+                currNode.left = toBeAddedNode
+                return
+
+            self._addNode(toBeAddedNode, currNode.left)
+
+        
+        if toBeAddedNode.key > currNode.key: 
+
+            if currNode.right is None: 
+                currNode.right = toBeAddedNode
+                return
+            
+            self._addNode(toBeAddedNode, currNode.right)
+
+    def addNode(self, node: BinaryTreeNode): 
+
+        if self.root is None: 
+            self.root = node
+            return
+
+        self._addNode(node, self.root)
+
+    def search(self, key): 
+        return self._searchHelper(key, self.root)
+
+    def _searchHelper(self, key: int, node: Optional[BinaryTreeNode] = None):
+
+        if node is None or node.key == key: 
+            return node
+
+        if key < node.key: 
+            return self._searchHelper(key, node.left)
+        
+        return self._searchHelper(key, node.right)
+
+
+    def getMinimum(self): 
+
+        if self.root is None: 
+            return None
+        
+        node = self.root
+
+        while node.left is not None: 
+            node = node.left
+
+        return node
+
+    
+    def getMaximum(self): 
+
+        if self.root is None: 
+            return None
+
+        node = self.root
+
+        while node.right is not None: 
+            node = node.right
+
+        return node
+
 
 class TwoSum: 
     def __init__(self, elements: Optional[list[int]] = None) -> None:
@@ -430,3 +646,15 @@ class TwoSum:
         
         return None
 
+
+
+def main():
+    nodes = [18,12,10,7,4,2,21,None,None,5]
+    bt = BinaryTree(nodes)
+
+    for node in bt.postOrder():
+        print(node)
+
+
+if __name__ == "__main__":
+    main()
