@@ -10,4 +10,7 @@ class TreeTraversable(Protocol):
 
     def postOrder(self): 
         ...
+    
+    def levelOrder(self):
+        ...
 

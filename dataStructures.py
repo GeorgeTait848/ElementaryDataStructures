@@ -393,8 +393,6 @@ class InOrderIterator:
         return self.__next__()
         
  
-
-
 class PostOrderIterator: 
     def __init__(self, stack: Optional[Stack] = None) -> None:
         self.s = stack
@@ -424,6 +422,27 @@ class PostOrderIterator:
         return self.__next__()
 
 
+class LevelOrderIterator: 
+    def __init__(self, queue: Optional[Queue] = None):
+        self.q = queue
+
+    def __iter__(self): 
+        return self
+
+    def __next__(self): 
+
+        if not self.q: 
+            raise StopIteration
+            
+        _, curr = self.q.dequeue()
+
+        if curr.left: 
+            self.q.enqueue(curr.left)
+        
+        if curr.right: 
+            self.q.enqueue(curr.right)
+
+        return curr
         
 
 
@@ -515,7 +534,17 @@ class BinaryTree(TreeTraversable):
 
 
     def postOrder(self):
+
+        if not self.root: 
+            return PostOrderIterator()
+
         return PostOrderIterator(Stack([(self.root, False)]))
+
+    def levelOrder(self):
+        if not self.root: 
+            return LevelOrderIterator()
+        
+        return LevelOrderIterator(Queue([self.root]))
 
 
 
@@ -649,10 +678,10 @@ class TwoSum:
 
 
 def main():
-    nodes = [18,12,10,7,4,2,21,None,None,5]
+    nodes = [1,7,9,2,6,None,9,None,None,5,11,None,None,5]
     bt = BinaryTree(nodes)
 
-    for node in bt.postOrder():
+    for node in bt.levelOrder():
         print(node)
 
 

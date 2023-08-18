@@ -680,6 +680,32 @@ class BinaryTreeTest(unittest.TestCase):
 
             self.assertEqual(res, expectedResults[i])
 
+    def test_level_order_traversal(self): 
+
+        treesNodes = [
+            [18,12,10,7,4,2,21,None, None,5],
+            [12,3,2,5,3,None,9], 
+            [1,3,2,5,None,None,9,6,None,None,None,None,None,7], 
+            [1,3,2,5]
+        ]
+
+        expectedResults = [
+            [18,12,10,7,4,2,21,5], 
+            [12,3,2,5,3,9], 
+            [1,3,2,5,9,6,7], 
+            [1,3,2,5]
+        ]
+
+        for i in range(len(treesNodes)):
+            t = BinaryTree(treesNodes[i])
+
+            res = []
+            for n in t.levelOrder():
+                res.append(n.key)
+            
+
+            self.assertEqual(res, expectedResults[i])
+
 class BSTTests(unittest.TestCase): 
 
     def test_empty_BST(self): 
