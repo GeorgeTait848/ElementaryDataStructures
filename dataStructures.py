@@ -15,7 +15,6 @@ class ImproperKeysForBinaryTree(Exception):
     pass
 
 
-
 class LinkedListNode:
 
     def __init__(self, data, doublyLinked: bool = False) -> None:
@@ -123,6 +122,27 @@ class LinkedList:
 
     def __bool__(self): 
         return self.head is not None
+
+    def __getitem__(self, index): 
+        
+        i = 0
+
+        for node in self: 
+            if i == index: 
+                return node
+            
+            i += 1
+        raise(IndexError)
+
+
+    def splitInHalf(self):
+
+        n = len(self)
+        if n == 1: 
+            return self
+
+
+
 
     def addFirst(self, node: LinkedListNode):
         

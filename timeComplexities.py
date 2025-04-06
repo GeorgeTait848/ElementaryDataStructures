@@ -122,13 +122,14 @@ def plotTimeComplexity(dataStructure, operationName: str, lens: list[int], **kwa
 def main():
 
     lens = [1_000, 10_000, 50_000, 100_000, 500_000, 1_000_000, 5_000_000, 10_000_000]
+    t = getComputationTimes(TwoSum, 'useHashMap', lens, target=1)
 
-    plotTimeComplexity(LinkedList, 'addFirst', lens, node=LinkedListNode(0))
+    # plotTimeComplexity(LinkedList, 'addFirst', lens, node=LinkedListNode(0))
     # plotTimeComplexity(LinkedList, 'reverse', lens)
     # plotTimeComplexity(LinkedList, 'addLast', lens, node=Node(0))
     # plotTimeComplexity(LinkedList, 'pop', lens)
     # plotTimeComplexity(TwoSum, 'useLoop', lens, target=1)
-    # plotTimeComplexity(TwoSum, 'useHashMap', lens, target=1)
+    plotTimeComplexity(TwoSum, 'useHashMap', lens, target=1)
 
 
 if __name__ == "__main__":

@@ -329,6 +329,15 @@ class LinkedListTests(unittest.TestCase):
             self.assertEqual(correctReversedLists[i], self.testLinkedLists[i])
             self.testLinkedLists[i] = currentLL
 
+    def testDunderGetItem(self): 
+
+        ll = LinkedList([1,2,3,4,5])
+        self.assertEqual(ll[0].data, 1)
+        self.assertEqual(ll[1].data, 2)
+        self.assertEqual(ll[2].data, 3)
+        self.assertEqual(ll[3].data, 4)
+        self.assertEqual(ll[4].data, 5)
+
 class StackTests(unittest.TestCase):
 
     def __init__(self, methodName: str = ...) -> None:
@@ -596,8 +605,6 @@ class BinaryTreeTest(unittest.TestCase):
         widths = [4,4,7,2]
 
         for i in range(len(treesNodes)): 
-            print('\n')
-            print('i =', i)
             currTree = BinaryTree(treesNodes[i])
             self.assertEqual(currTree.getWidth(), widths[i])
 
